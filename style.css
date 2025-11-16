@@ -1,0 +1,60 @@
+:root {
+    --text-color: rgba(255, 255, 255, 0.8);
+    --bg-color: #0a0f0a;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: var(--bg-color);
+    font-family: 'Raleway', sans-serif;
+    color: var(--text-color);
+}
+
+#canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    pointer-events: none; /* Allows mouse events to pass through to the canvas */
+    text-align: center;
+    animation: fadeOut 8s ease-in-out forwards;
+    animation-delay: 2s;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; visibility: hidden; }
+}
+
+h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem;
+    font-weight: 300;
+    margin: 0;
+    letter-spacing: 0.2em;
+    text-shadow: 0 0 15px rgba(255, 250, 205, 0.3);
+}
+
+p {
+    font-size: 1.2rem;
+    font-weight: 200;
+    letter-spacing: 0.1em;
+    margin-top: 10px;
+}
