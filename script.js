@@ -1,0 +1,135 @@
+let branches = [];
+let leaves = [];
+let sunbeams = [];
+
+function setup() {
+    let canvas = createCanvas(windowWidth, windowHeight);
+    canvas.parent('canvas-container');
+    colorMode(HSB, 360, 100, 100, 100);
+    noStroke();
+    background(120, 30, 8); 
+}
+
+function draw() {
+    background(120, 30, 8, 5);
+    for (let i = sunbeams.length - 1; i >= 0; i--) {
+        sunbeams[i].update();
+        sunbeams[i].display();
+        if (sunbeams[i].isDead()) {
+            sunbeams.splice(i, 1);
+        }
+    }
+    for (let i = branches.length - 1; i >= 0; i--) {
+        branches[i].update();
+        branches[i].display();
+        if (branches[i].isDead()) {
+            branches.splice(i, 1);
+        }
+    }
+    for (let i = leaves.length - 1; i >= 0; i--) {
+        leaves[i].update();
+        leaves[i].display();
+        if (leaves[i].isDead()) {
+            leaves.splice(i, 1);
+        }
+    }
+}
+
+function mouseMoved() {
+    if (frameCount % 2 === 0) {
+        branches.push(new Branch(mouseX, mouseY));
+    }
+    if (frameCount % 5 === 0) {
+        leaves.push(new Leaf(mouseX, mouseY));
+    }
+    if (frameCount % 3 === 0) {
+        sunbeams.push(new Sunbeam(mouseX, mouseY));
+    }
+}
+
+class Branch {
+    constructor(x, y) {
+        this.pos = createVector(x, y);
+        this.vel = p5.Vector.random2D().mult(random(0.5, 1.5));
+        this.life = 255;
+        this.angle = random(TWO_PI);
+        this.angleVel = random(-0.05, 0.05);
+        this.len = random(20, 60);
+    }
+    update() {
+        this.pos.add(this.vel);
+        this.vel.mult(0.98);
+        this.life -= 2;
+        this.angle += this.angleVel;
+    }
+    display() {
+        push();
+        translate(this.pos.x, this.pos.y);
+        rotate(this.angle);
+        stroke(30, 20, 30, this.life * 0.5);
+        strokeWeight(2);
+        line(0, 0, this.len, 0);
+        pop();
+    }
+    isDead() {
+        return this.life < 0;
+    }
+}
+
+class Leaf {
+    constructor(x, y) {
+        this.pos = createVector(x, y);
+        this.vel = p5.Vector.random2D().mult(random(0.2, 1));
+        this.acc = createVector(0, 0.05);
+        this.life = 255;
+        this.size = random(5, 15);
+        this.rotation = random(TWO_PI);
+        this.rotSpeed = random(-0.05, 0.05);
+    }
+    update() {
+        this.vel.add(this.acc);
+        this.vel.add(p5.Vector.random2D().mult(0.1));
+        this.pos.add(this.vel);
+        this.life -= 1.5;
+        this.rotation += this.rotSpeed;
+    }
+    display() {
+        push();
+        translate(this.pos.x, this.pos.y);
+        rotate(this.rotation);
+        fill(90, 60, 70, this.life * 0.6);
+        noStroke();
+        ellipse(0, 0, this.size);
+        pop();
+    }
+    isDead() {
+        return this.life < 0 || this.pos.y > height + 20;
+    }
+}
+
+class Sunbeam {
+    constructor(x, y) {
+        this.pos = createVector(x, y);
+        this.vel = createVector(random(-0.5, 0.5), random(1, 3));
+        this.life = 100;
+        this.len = random(50, 150);
+    }
+    update() {
+        this.pos.add(this.vel);
+        this.life -= 1;
+    }
+    display() {
+        push();
+        stroke(60, 30, 100, this.life * 0.3);
+        strokeWeight(random(1, 3));
+        line(this.pos.x, this.pos.y, this.pos.x - this.vel.x * 10, this.pos.y - this.vel.y * 10);
+        pop();
+    }
+    isDead() {
+        return this.life < 0 || this.pos.y > height;
+    }
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+}
